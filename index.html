@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T.A.S.K. — Test Animation Site Kuz</title>
     <style>
-        /* Фирменный стиль T.A.S.K. (киберпанк-минимализм) */
+        /* Стильный темный фон с неоново-желтыми акцентами */
         body {
-            background-color: #0b0c10;
-            color: #c5c6c7;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 30px;
+            transition: all 0.3s ease;
         }
 
         header {
-            border-left: 4px solid #463077; /* Фиолетовый акцент */
+            border-left: 4px solid #ffe600; /* Желтый акцент */
             padding-left: 20px;
             margin-bottom: 40px;
         }
@@ -23,42 +24,48 @@
         h1 {
             color: #ffffff;
             margin: 0;
-            font-size: 28px;
-            letter-spacing: 2px;
+            font-size: 32px;
+            letter-spacing: 3px;
         }
 
         .subtitle {
-            color: #66fcf1; /* Бирюзовый акцент */
-            margin: 5px 0 0 0;
+            color: #ffe600; /* Желтый текст подзаголовка */
+            margin: 8px 0 0 0;
             font-size: 14px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* Наша кастомная сетка для коротких рендеров */
+        /* Умная сетка, которая плавно раздвигается при увеличении карточек */
         .animation-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            gap: 30px;
+            padding: 10px 0;
         }
 
         /* Стиль карточки анимации */
         .anim-card {
-            background: #1f2833;
-            border-radius: 8px;
+            background: #141414;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-            border: 1px solid #2f3e46;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                        border-color 0.3s ease, 
+                        box-shadow 0.3s ease;
+            border: 1px solid #222222;
+            z-index: 1;
         }
 
-        /* Эффект при наведении на карточку */
+        /* 1) Эффект сильного увеличения с вытеснением остальных элементов */
         .anim-card:hover {
-            transform: translateY(-5px);
-            border-color: #66fcf1;
-            box-shadow: 0 10px 20px rgba(102, 252, 241, 0.2);
+            transform: scale(1.08); /* Карточка заметно увеличивается */
+            border-color: #ffe600; /* Подсветка желтым */
+            box-shadow: 0 15px 30px rgba(255, 230, 0, 0.2); /* Желтое свечение */
+            z-index: 10; /* Карточка перекрывает соседей при наложении */
         }
 
-        /* Контейнер для видео под размер 640x360 (соотношение 16:9) */
+        /* Контейнер для видео 16:9 */
         .video-box {
             position: relative;
             width: 100%;
@@ -66,33 +73,42 @@
             background: #000;
         }
 
-        /* Настройки нашего видеоплеера */
+        /* Видео без стандартных кнопок */
         .video-box video {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Видео аккуратно заполнит карточку */
+            object-fit: cover;
             cursor: pointer;
         }
 
         /* Информация о рендере */
         .anim-info {
-            padding: 15px;
+            padding: 18px;
         }
 
         .anim-title {
             color: #ffffff;
             font-size: 16px;
-            margin: 0 0 8px 0;
+            margin: 0 0 10px 0;
+            font-weight: 600;
         }
 
         .anim-meta {
             font-size: 12px;
-            color: #858585;
+            color: #888888;
             display: flex;
             justify-content: space-between;
+        }
+        
+        .anim-duration {
+            background: #222;
+            color: #ffe600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -100,64 +116,67 @@
 
     <header>
         <h1>T.A.S.K.</h1>
-        <div class="subtitle">Test Animation Site Kuz // Лаборатория 3D-анимации</div>
+        <!-- 4) Новое чистое описание по вашей задумке -->
+        <div class="subtitle">Test Animation Site Kuz</div>
     </header>
 
     <main>
-        <div class="animation-grid">
-
-            <!-- КАРТОЧКА АНИМАЦИИ 1 -->
-            <div class="anim-card">
-                <div class="video-box">
-                    <!-- loop делает видео бесконечным, muted позволяет запускать автоматически -->
-                    <video loop muted controls poster="videos/preview1.jpg">
-                        <source src="videos/render1.mp4" type="video/mp4">
-                        Ваш браузер не поддерживает видео.
-                    </video>
-                </div>
-                <div class="anim-info">
-                    <h3 class="anim-title">01. Первая проба физики</h3>
-                    <div class="anim-meta">
-                        <span>Длительность: 4с</span>
-                        <span>Цикличный рендер</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- КАРТОЧКА АНИМАЦИИ 2 -->
-            <div class="anim-card">
-                <div class="video-box">
-                    <video loop muted controls>
-                        <source src="videos/render2.mp4" type="video/mp4">
-                        Ваш браузер не поддерживает видео.
-                    </video>
-                </div>
-                <div class="anim-info">
-                    <h3 class="anim-title">02. Тест камеры и света</h3>
-                    <div class="anim-meta">
-                        <span>Длительность: 8с</span>
-                        <span>Cycles 360p</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Добавляйте новые карточки ниже по этому же шаблону -->
-
-        </div>
+        <!-- Сюда JavaScript будет автоматически добавлять карточки -->
+        <div class="animation-grid" id="grid"></div>
     </main>
 
     <script>
-        // Небольшой скрипт для интерактива: 
-        // Видео начинает играть само при наведении мышки, и встает на паузу, когда мышку убирают.
-        const videos = document.querySelectorAll('video');
+        // 3) АВТОМАТИЗАЦИЯ: База данных ваших видео. 
+        // Когда создадите новый рендер, просто добавьте строчку СЮДА в список!
+        const myAnimations = [
+            {
+                id: "01",
+                title: "Первая проба физики",
+                file: "videos/render1.mp4",
+                duration: "4с",
+                note: "Цикличный рендер"
+            },
+            {
+                id: "02",
+                title: "Тест камеры и света",
+                file: "videos/render2.mp4",
+                duration: "8с",
+                note: "Cycles 360p"
+            }
+            // Чтобы добавить третье видео, поставьте запятую выше и напишите:
+            // { id: "03", title: "Название", file: "videos/render3.mp4", duration: "5с", note: "Описание" }
+        ];
+
+        // Функция, которая сама собирает сайт из списка выше
+        const grid = document.getElementById('grid');
         
+        myAnimations.forEach(anim => {
+            const card = document.createElement('div');
+            card.className = 'anim-card';
+            card.innerHTML = `
+                <div class="video-box">
+                    <video loop muted playsinline>
+                        <source src="${anim.file}" type="video/mp4">
+                    </video>
+                </div>
+                <div class="anim-info">
+                    <h3 class="anim-title">${anim.id}. ${anim.title}</h3>
+                    <div class="anim-meta">
+                        <span class="anim-duration">${anim.duration}</span>
+                        <span>${anim.note}</span>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        // Скрипт оживления видео при наведении (без кнопок управления)
+        const videos = document.querySelectorAll('video');
         videos.forEach(video => {
-            video.addEventListener('mouseenter', () => {
-                video.play();
-            });
+            video.addEventListener('mouseenter', () => video.play());
             video.addEventListener('mouseleave', () => {
                 video.pause();
-                video.currentTime = 0; // Сбрасывает на начало, как гифку
+                video.currentTime = 0;
             });
         });
     </script>
