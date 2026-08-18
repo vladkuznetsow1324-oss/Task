@@ -1,4 +1,4 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -130,56 +130,58 @@
 
     <script>
         // СПИСОК ВАШИХ ВИДЕО:
-        // Просто вписывайте сюда точные имена файлов из папки videos.
-        // Скрипт сам заберет номер до "_" и название после "_", а также посчитает секунды!
+        // Просто пишите сюда точные названия файлов из папки videos (можно с пробелами)
         const myVideos = [
-            "0001_Физика сферы.mp4",
-            "0002_Падение кирпичей.mp4",
-            "0003_Старый монитор.mp4"
+            "0001 Физика сферы.mp4",
+            "0002 Падение кирпичей.mp4",
+            "0003 Старый монитор.mp4"
         ];
 
         const grid = document.getElementById('grid');
 
-        // Построение карточек
-        myVideos.forEach(fileName => {
-            const fileNameWithoutExt = fileName.replace('.mp4', ''); 
-            const underscoreIndex = fileNameWithoutExt.indexOf('_');
-            
-            let videoNumber = fileNameWithoutExt;
-            let videoTitle = "Новый рендер";
-
-            if (underscoreIndex !== -1) {
-                videoNumber = fileNameWithoutExt.substring(0, underscoreIndex);
-                videoTitle = fileNameWithoutExt.substring(underscoreIndex + 1);
-            }
+        // Создаем карточки на основе списка
+        myVideos.forEach((fileName, index) => {
+            // Просто убираем .mp4 в конце, чтобы получить чистый заголовок карточки
+            const cleanTitle = fileName.replace('.mp4', '');
+            // Создаем уникальный ID для таймера секунд
+            const timerId = `dur-${index}`;
             
             const card = document.createElement('div');
             card.className = 'anim-card';
             card.innerHTML = `
                 <div class="video-box">
-                    <video loop playsinline preload="metadata">
+                    <video loop playsinline preload="auto">
                         <source src="videos/${fileName}" type="video/mp4">
                     </video>
                 </div>
                 <div class="anim-info">
                     <h3 class="anim-title">
-                        <span style="color: #00ff66; font-weight: normal; margin-right: 5px;">#${videoNumber}</span> 
-                        ${videoTitle}
+                        <span style="color: #00ff66;">#</span>${cleanTitle}
                     </h3>
                     <div class="anim-meta">
-                        <span class="anim-duration" id="dur-${videoNumber}">Замер...</span>
+                        <span class="anim-duration" id="${timerId}">0с</span>
                         <span>Blender Render</span>
                     </div>
                 </div>
             `;
             grid.appendChild(card);
 
-            // Автоматический замер длительности видео
+            // Надежный замер длительности видео
             const videoEl = card.querySelector('video');
-            videoEl.addEventListener('loadedmetadata', () => {
-                const duration = Math.round(videoEl.duration);
-                document.getElementById(`dur-${videoNumber}`).innerText = duration + 'с';
-            });
+            
+            function setDuration() {
+                if (videoEl.duration) {
+                    const duration = Math.round(videoEl.duration);
+                    document.getElementById(timerId).innerText = duration + 'с';
+                }
+            }
+
+            // Проверяем, если данные уже загружены, или ждем их загрузки
+            if (videoEl.readyState >= 1) {
+                setDuration();
+            } else {
+                videoEl.addEventListener('loadedmetadata', setDuration);
+            }
         });
 
         // Запуск видео со звуком при наведении
@@ -187,7 +189,7 @@
         videos.forEach(video => {
             video.addEventListener('mouseenter', () => {
                 video.muted = false;
-                video.play().catch(err => console.log("Требуется клик на сайте для звука"));
+                video.play().catch(err => console.log("Нужен клик на странице для активации звука"));
             });
             video.addEventListener('mouseleave', () => {
                 video.pause();
