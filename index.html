@@ -9,13 +9,13 @@
         body {
             background-color: #050505;
             color: #a5a5a5;
-            font-family: 'Consolas', 'Courier New', Courier, monospace; /* Шрифт кода для стиля */
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
             margin: 0;
             padding: 40px;
         }
 
         header {
-            border-left: 4px solid #00ff66; /* Зеленый акцент */
+            border-left: 4px solid #00ff66;
             padding-left: 20px;
             margin-bottom: 50px;
         }
@@ -29,7 +29,7 @@
         }
 
         .subtitle {
-            color: #00ff66; /* Зеленый текст подзаголовка */
+            color: #00ff66;
             margin: 8px 0 0 0;
             font-size: 16px;
             text-transform: uppercase;
@@ -39,8 +39,8 @@
         /* Крупная сетка для больших превью */
         .animation-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); /* Увеличили минимальный размер */
-            gap: 40px; /* Больше пространства между карточками */
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 40px;
             padding: 20px 0;
         }
 
@@ -59,10 +59,10 @@
 
         /* Эффект сильного увеличения при наведении */
         .anim-card:hover {
-            transform: scale(1.1); /* Заметное увеличение */
-            border-color: #00ff66; /* Подсветка зеленым */
-            box-shadow: 0 20px 40px rgba(0, 255, 102, 0.25); /* Зеленое свечение */
-            z-index: 99; /* Выталкивает карточку на передний план над остальными */
+            transform: scale(1.1);
+            border-color: #00ff66;
+            box-shadow: 0 20px 40px rgba(0, 255, 102, 0.25);
+            z-index: 99;
         }
 
         /* Контейнер для видео 16:9 */
@@ -95,6 +95,7 @@
             font-size: 18px;
             margin: 0 0 12px 0;
             font-weight: bold;
+            line-height: 1.4;
         }
 
         .anim-meta {
@@ -115,7 +116,6 @@
             border: 1px solid rgba(0, 255, 102, 0.2);
         }
 
-        /* Сообщение о загрузке */
         #loading {
             color: #00ff66;
             font-size: 18px;
@@ -137,48 +137,57 @@
     </main>
 
     <script>
-        // НАСТРОЙКА АВТОМАТИЗАЦИИ:
-        // Укажите здесь ваш точный ник на GitHub и название репозитория
         const githubUser = "vladkuznetsow1324-oss";
         const repoName = "Task"; 
 
         const grid = document.getElementById('grid');
         const loadingText = document.getElementById('loading');
 
-        // Функция автоматического считывания папки через GitHub API
         async function loadVideosAutomatically() {
             try {
-                const response = await fetch(`https://api.github.com/repos/${githubUser}/${repoName}/contents/videos`);
+                const response = await fetch(`https://github.com{githubUser}/${repoName}/contents/videos`);
                 if (!response.ok) throw new Error("Не удалось прочитать папку videos");
                 
                 const files = await response.json();
-                
-                // Фильтруем только файлы .mp4
                 const videoFiles = files.filter(file => file.name.endsWith('.mp4'));
                 
                 if (videoFiles.length === 0) {
-                    loadingText.innerText = "Папка videos пуста. Загрузите туда файлы, например, 0001.mp4";
+                    loadingText.innerText = "Папка videos пуста. Загрузите туда файлы, например, 0001_Мой Рендер.mp4";
                     return;
                 }
 
-                loadingText.style.display = 'none'; // Скрываем надпись загрузки
+                loadingText.style.display = 'none';
 
-                // Создаем карточку для каждого найденного видео
                 videoFiles.forEach(file => {
-                    // Извлекаем имя без расширения (например, "0001")
-                    const videoNumber = file.name.replace('.mp4', ''); 
+                    // Убираем расширение .mp4 из имени файла
+                    const fileNameWithoutExt = file.name.replace('.mp4', ''); 
+                    
+                    // Разделяем строку на две части по первому нижнему подчеркиванию "_"
+                    const underscoreIndex = fileNameWithoutExt.indexOf('_');
+                    
+                    let videoNumber = fileNameWithoutExt;
+                    let videoTitle = "Новый рендер";
+
+                    if (underscoreIndex !== -1) {
+                        // Если нашли "_", разделяем текст
+                        videoNumber = fileNameWithoutExt.substring(0, underscoreIndex);
+                        videoTitle = fileNameWithoutExt.substring(underscoreIndex + 1);
+                    }
                     
                     const card = document.createElement('div');
                     card.className = 'anim-card';
                     card.innerHTML = `
                         <div class="video-box">
-                            <!-- Убрали muted, чтобы был звук -->
                             <video loop playsinline preload="metadata">
                                 <source src="${file.path}" type="video/mp4">
                             </video>
                         </div>
                         <div class="anim-info">
-                            <h3 class="anim-title">Рендер #${videoNumber}</h3>
+                            <!-- Выводим красиво отформатированный заголовок -->
+                            <h3 class="anim-title">
+                                <span style="color: #00ff66; font-weight: normal; margin-right: 5px;">#${videoNumber}</span> 
+                                ${videoTitle}
+                            </h3>
                             <div class="anim-meta">
                                 <span class="anim-duration" id="dur-${videoNumber}">Замер...</span>
                                 <span>Blender Render</span>
@@ -187,7 +196,6 @@
                     `;
                     grid.appendChild(card);
 
-                    // Автоматически определяем длину видео, когда оно подгрузится
                     const videoEl = card.querySelector('video');
                     videoEl.addEventListener('loadedmetadata', () => {
                         const duration = Math.round(videoEl.duration);
@@ -195,7 +203,6 @@
                     });
                 });
 
-                // Вешаем события мыши на динамически созданные видео
                 initVideoHover();
 
             } catch (error) {
@@ -204,13 +211,12 @@
             }
         }
 
-        // Логика воспроизведения со звуком при наведении
         function initVideoHover() {
             const videos = document.querySelectorAll('video');
             videos.forEach(video => {
                 video.addEventListener('mouseenter', () => {
-                    video.muted = false; // Звук включен!
-                    video.play().catch(err => console.log("Браузер заблокировал автозвук до первого клика по сайту"));
+                    video.muted = false;
+                    video.play().catch(err => console.log("Браузер ожидает клика пользователя для включения звука"));
                 });
                 video.addEventListener('mouseleave', () => {
                     video.pause();
@@ -219,7 +225,6 @@
             });
         }
 
-        // Запуск системы
         loadVideosAutomatically();
     </script>
 </body>
