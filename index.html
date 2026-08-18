@@ -5,64 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T.A.S.K. — Test Animation Site Kuz</title>
     <style>
-        /* Стильный темный фон с неоново-желтыми акцентами */
+        /* Стильный хакерский дизайн: глубокий черный и неоново-зеленый */
         body {
-            background-color: #0a0a0a;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #050505;
+            color: #a5a5a5;
+            font-family: 'Consolas', 'Courier New', Courier, monospace; /* Шрифт кода для стиля */
             margin: 0;
-            padding: 30px;
-            transition: all 0.3s ease;
+            padding: 40px;
         }
 
         header {
-            border-left: 4px solid #ffe600; /* Желтый акцент */
+            border-left: 4px solid #00ff66; /* Зеленый акцент */
             padding-left: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         h1 {
             color: #ffffff;
             margin: 0;
-            font-size: 32px;
-            letter-spacing: 3px;
+            font-size: 36px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
         }
 
         .subtitle {
-            color: #ffe600; /* Желтый текст подзаголовка */
+            color: #00ff66; /* Зеленый текст подзаголовка */
             margin: 8px 0 0 0;
-            font-size: 14px;
+            font-size: 16px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
-        /* Умная сетка, которая плавно раздвигается при увеличении карточек */
+        /* Крупная сетка для больших превью */
         .animation-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            padding: 10px 0;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); /* Увеличили минимальный размер */
+            gap: 40px; /* Больше пространства между карточками */
+            padding: 20px 0;
         }
 
-        /* Стиль карточки анимации */
+        /* Стиль большой карточки анимации */
         .anim-card {
-            background: #141414;
-            border-radius: 12px;
+            background: #111111;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
                         border-color 0.3s ease, 
                         box-shadow 0.3s ease;
-            border: 1px solid #222222;
-            z-index: 1;
+            border: 1px solid #1a1a1a;
+            position: relative;
         }
 
-        /* 1) Эффект сильного увеличения с вытеснением остальных элементов */
+        /* Эффект сильного увеличения при наведении */
         .anim-card:hover {
-            transform: scale(1.08); /* Карточка заметно увеличивается */
-            border-color: #ffe600; /* Подсветка желтым */
-            box-shadow: 0 15px 30px rgba(255, 230, 0, 0.2); /* Желтое свечение */
-            z-index: 10; /* Карточка перекрывает соседей при наложении */
+            transform: scale(1.1); /* Заметное увеличение */
+            border-color: #00ff66; /* Подсветка зеленым */
+            box-shadow: 0 20px 40px rgba(0, 255, 102, 0.25); /* Зеленое свечение */
+            z-index: 99; /* Выталкивает карточку на передний план над остальными */
         }
 
         /* Контейнер для видео 16:9 */
@@ -73,7 +73,7 @@
             background: #000;
         }
 
-        /* Видео без стандартных кнопок */
+        /* Настройки видео */
         .video-box video {
             position: absolute;
             top: 0;
@@ -86,29 +86,41 @@
 
         /* Информация о рендере */
         .anim-info {
-            padding: 18px;
+            padding: 22px;
+            background: #0d0d0d;
         }
 
         .anim-title {
             color: #ffffff;
-            font-size: 16px;
-            margin: 0 0 10px 0;
-            font-weight: 600;
+            font-size: 18px;
+            margin: 0 0 12px 0;
+            font-weight: bold;
         }
 
         .anim-meta {
-            font-size: 12px;
-            color: #888888;
+            font-size: 13px;
+            color: #666666;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
         
         .anim-duration {
-            background: #222;
-            color: #ffe600;
-            padding: 2px 6px;
-            border-radius: 4px;
+            background: #1a1a1a;
+            color: #00ff66;
+            padding: 4px 8px;
+            border-radius: 6px;
             font-weight: bold;
+            font-size: 12px;
+            border: 1px solid rgba(0, 255, 102, 0.2);
+        }
+
+        /* Сообщение о загрузке */
+        #loading {
+            color: #00ff66;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 50px;
         }
     </style>
 </head>
@@ -116,69 +128,99 @@
 
     <header>
         <h1>T.A.S.K.</h1>
-        <!-- 4) Новое чистое описание по вашей задумке -->
         <div class="subtitle">Test Animation Site Kuz</div>
     </header>
 
     <main>
-        <!-- Сюда JavaScript будет автоматически добавлять карточки -->
+        <div id="loading">Сканирование папки с рендерами...</div>
         <div class="animation-grid" id="grid"></div>
     </main>
 
     <script>
-        // 3) АВТОМАТИЗАЦИЯ: База данных ваших видео. 
-        // Когда создадите новый рендер, просто добавьте строчку СЮДА в список!
-        const myAnimations = [
-            {
-                id: "01",
-                title: "Первая проба физики",
-                file: "videos/render1.mp4",
-                duration: "4с",
-                note: "Цикличный рендер"
-            },
-            {
-                id: "02",
-                title: "Тест камеры и света",
-                file: "videos/render2.mp4",
-                duration: "8с",
-                note: "Cycles 360p"
-            }
-            // Чтобы добавить третье видео, поставьте запятую выше и напишите:
-            // { id: "03", title: "Название", file: "videos/render3.mp4", duration: "5с", note: "Описание" }
-        ];
+        // НАСТРОЙКА АВТОМАТИЗАЦИИ:
+        // Укажите здесь ваш точный ник на GitHub и название репозитория
+        const githubUser = "vladkuznetsow1324-oss";
+        const repoName = "Task"; 
 
-        // Функция, которая сама собирает сайт из списка выше
         const grid = document.getElementById('grid');
-        
-        myAnimations.forEach(anim => {
-            const card = document.createElement('div');
-            card.className = 'anim-card';
-            card.innerHTML = `
-                <div class="video-box">
-                    <video loop muted playsinline>
-                        <source src="${anim.file}" type="video/mp4">
-                    </video>
-                </div>
-                <div class="anim-info">
-                    <h3 class="anim-title">${anim.id}. ${anim.title}</h3>
-                    <div class="anim-meta">
-                        <span class="anim-duration">${anim.duration}</span>
-                        <span>${anim.note}</span>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
+        const loadingText = document.getElementById('loading');
 
-        // Скрипт оживления видео при наведении (без кнопок управления)
-        const videos = document.querySelectorAll('video');
-        videos.forEach(video => {
-            video.addEventListener('mouseenter', () => video.play());
-            video.addEventListener('mouseleave', () => {
-                video.pause();
-                video.currentTime = 0;
+        // Функция автоматического считывания папки через GitHub API
+        async function loadVideosAutomatically() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${githubUser}/${repoName}/contents/videos`);
+                if (!response.ok) throw new Error("Не удалось прочитать папку videos");
+                
+                const files = await response.json();
+                
+                // Фильтруем только файлы .mp4
+                const videoFiles = files.filter(file => file.name.endsWith('.mp4'));
+                
+                if (videoFiles.length === 0) {
+                    loadingText.innerText = "Папка videos пуста. Загрузите туда файлы, например, 0001.mp4";
+                    return;
+                }
+
+                loadingText.style.display = 'none'; // Скрываем надпись загрузки
+
+                // Создаем карточку для каждого найденного видео
+                videoFiles.forEach(file => {
+                    // Извлекаем имя без расширения (например, "0001")
+                    const videoNumber = file.name.replace('.mp4', ''); 
+                    
+                    const card = document.createElement('div');
+                    card.className = 'anim-card';
+                    card.innerHTML = `
+                        <div class="video-box">
+                            <!-- Убрали muted, чтобы был звук -->
+                            <video loop playsinline preload="metadata">
+                                <source src="${file.path}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="anim-info">
+                            <h3 class="anim-title">Рендер #${videoNumber}</h3>
+                            <div class="anim-meta">
+                                <span class="anim-duration" id="dur-${videoNumber}">Замер...</span>
+                                <span>Blender Render</span>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+
+                    // Автоматически определяем длину видео, когда оно подгрузится
+                    const videoEl = card.querySelector('video');
+                    videoEl.addEventListener('loadedmetadata', () => {
+                        const duration = Math.round(videoEl.duration);
+                        document.getElementById(`dur-${videoNumber}`).innerText = duration + 'с';
+                    });
+                });
+
+                // Вешаем события мыши на динамически созданные видео
+                initVideoHover();
+
+            } catch (error) {
+                loadingText.innerText = "Ошибка автоматизации. Проверьте имя папки 'videos'.";
+                console.error(error);
+            }
+        }
+
+        // Логика воспроизведения со звуком при наведении
+        function initVideoHover() {
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.addEventListener('mouseenter', () => {
+                    video.muted = false; // Звук включен!
+                    video.play().catch(err => console.log("Браузер заблокировал автозвук до первого клика по сайту"));
+                });
+                video.addEventListener('mouseleave', () => {
+                    video.pause();
+                    video.currentTime = 0;
+                });
             });
-        });
+        }
+
+        // Запуск системы
+        loadVideosAutomatically();
     </script>
 </body>
 </html>
