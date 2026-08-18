@@ -3,24 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T.A.S.K.</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>T.A.S.K. — Test Animation Site Kuz</title>
+    <style>
+        /* Базовые стили в стиле темной темы YouTube */
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            border-bottom: 1px solid #3f3f3f;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #f1f1f1;
+        }
+
+        p.subtitle {
+            color: #aaa;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+
+        /* Сетка для видео-карточек */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Видео-карточка */
+        .video-card {
+            background-color: #1f1f1f;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02);
+        }
+
+        /* Адаптивный контейнер для видео */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Пропорции 16:9 */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container iframe, .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Описание под видео */
+        .video-info {
+            padding: 12px;
+        }
+
+        .video-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 8px 0;
+            line-height: 1.4;
+        }
+
+        .video-description {
+            font-size: 13px;
+            color: #aaa;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
 
     <header>
-        <!-- Навигация здесь -->
+        <h1>T.A.S.K.</h1>
+        <p class="subtitle">Test Animation Site Kuz — Мои шаги в 3D анимации Blender</p>
     </header>
 
     <main>
-        <!-- Основной контент здесь -->
+        <div class="video-grid">
+
+            <!-- Карточка Видео 1 (Пример встроенного видео с YouTube) -->
+            <div class="video-card">
+                <div class="video-container">
+                    <!-- Замените ССЫЛКУ в src на код вашего видео -->
+                    <iframe src="https://youtu.be/wR88sga-FSw" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Тестовая анимация #1: Прыгающий мяч</h3>
+                    <p class="video-description">Моя самая первая проба работы с ключами анимации и графиками в Blender.</p>
+                </div>
+            </div>
+
+            <!-- Карточка Видео 2 (Если решите хранить файлы прямо в репозитории) -->
+            <div class="video-card">
+                <div class="video-container">
+                    <!-- Файл должен лежать в папке вашего сайта, например в папке /videos/ -->
+                    <video controls>
+                        <source src="videos/my-render-2.mp4" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Тестовый рендер #2: Симуляция ткани</h3>
+                    <p class="video-description">Эксперименты с физикой ткани и правильным выставлением света Cycles.</p>
+                </div>
+            </div>
+
+            <!-- Сюда можно добавлять новые карточки по аналогии -->
+
+        </div>
     </main>
 
-    <footer>
-        <!-- Подвал сайта -->
-    </footer>
-
-    <script src="js/script.js"></script>
 </body>
 </html>
-<!-- Создай красивую форму обратной связи с полями Имя, Email и кнопкой Отправить -->
