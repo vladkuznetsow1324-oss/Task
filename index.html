@@ -115,6 +115,13 @@
             font-size: 12px;
             border: 1px solid rgba(0, 255, 102, 0.2);
         }
+
+        #loading {
+            color: #00ff66;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
@@ -125,77 +132,99 @@
     </header>
 
     <main>
+        <div id="loading">Сканирование папки с рендерами...</div>
         <div class="animation-grid" id="grid"></div>
     </main>
 
     <script>
-        // СПИСОК ВАШИХ ВИДЕО:
-        // Просто пишите сюда точные названия файлов из папки videos (можно с пробелами)
-        const myVideos = [
-            "0001 Физика сферы.mp4",
-            "0002 Падение кирпичей.mp4",
-            "0003 Старый монитор.mp4"
-        ];
+        const githubUser = "vladkuznetsow1324-oss";
+        const repoName = "Task"; 
 
         const grid = document.getElementById('grid');
+        const loadingText = document.getElementById('loading');
 
-        // Создаем карточки на основе списка
-        myVideos.forEach((fileName, index) => {
-            // Просто убираем .mp4 в конце, чтобы получить чистый заголовок карточки
-            const cleanTitle = fileName.replace('.mp4', '');
-            // Создаем уникальный ID для таймера секунд
-            const timerId = `dur-${index}`;
-            
-            const card = document.createElement('div');
-            card.className = 'anim-card';
-            card.innerHTML = `
-                <div class="video-box">
-                    <video loop playsinline preload="auto">
-                        <source src="videos/${fileName}" type="video/mp4">
-                    </video>
-                </div>
-                <div class="anim-info">
-                    <h3 class="anim-title">
-                        <span style="color: #00ff66;">#</span>${cleanTitle}
-                    </h3>
-                    <div class="anim-meta">
-                        <span class="anim-duration" id="${timerId}">0с</span>
-                        <span>Blender Render</span>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-
-            // Надежный замер длительности видео
-            const videoEl = card.querySelector('video');
-            
-            function setDuration() {
-                if (videoEl.duration) {
-                    const duration = Math.round(videoEl.duration);
-                    document.getElementById(timerId).innerText = duration + 'с';
+        async function loadVideosAutomatically() {
+            try {
+                // Запрос к GitHub API с защитой от старого кэша
+                const response = await fetch(`https://github.com{githubUser}/${repoName}/contents/videos?nocache=${Date.now()}`);
+                if (!response.ok) throw new Error("Не удалось прочитать папку");
+                
+                const files = await response.json();
+                const videoFiles = files.filter(file => file.name.endsWith('.mp4'));
+                
+                if (videoFiles.length === 0) {
+                    loadingText.innerText = "Папка videos пуста.";
+                    return;
                 }
-            }
 
-            // Проверяем, если данные уже загружены, или ждем их загрузки
-            if (videoEl.readyState >= 1) {
-                setDuration();
-            } else {
-                videoEl.addEventListener('loadedmetadata', setDuration);
-            }
-        });
+                loadingText.style.display = 'none';
 
-        // Запуск видео со звуком при наведении
-        const videos = document.querySelectorAll('video');
-        videos.forEach(video => {
-            video.addEventListener('mouseenter', () => {
-                video.muted = false;
-                video.play().catch(err => console.log("Нужен клик на странице для активации звука"));
+                videoFiles.forEach(file => {
+                    // ТВОЙ РАБОЧИЙ СКРИПТ КЛАССИФИКАЦИИ ИМЕНИ:
+                    const fileNameWithoutExt = file.name.replace('.mp4', '');
+                    const nameParts = fileNameWithoutExt.split('_');
+
+                    const videoNumber = nameParts[0]; 
+                    const videoTitle = nameParts[1] ? nameParts[1] : "Новый рендер"; 
+
+                    const card = document.createElement('div');
+                    card.className = 'anim-card';
+                    card.innerHTML = `
+                        <div class="video-box">
+                            <video loop playsinline preload="auto">
+                                <source src="${file.path}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="anim-info">
+                            <h3 class="anim-title">
+                                <span style="color:#00ff66">#${videoNumber}</span> ${videoTitle}
+                            </h3>
+                            <div class="anim-meta">
+                                <span class="anim-duration" id="dur-${videoNumber}">0с</span>
+                                <span>Blender Render</span>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+
+                    // Надежный замер секунд (исправлено, чтобы не зависало на "Замер...")
+                    const videoEl = card.querySelector('video');
+                    function updateTimer() {
+                        if (videoEl.duration) {
+                            document.getElementById(`dur-${videoNumber}`).innerText = Math.round(videoEl.duration) + 'с';
+                        }
+                    }
+                    if (videoEl.readyState >= 1) {
+                        updateTimer();
+                    } else {
+                        videoEl.addEventListener('loadedmetadata', updateTimer);
+                    }
+                });
+
+                initVideoHover();
+
+            } catch (error) {
+                loadingText.innerText = "Ошибка автоматизации. Убедитесь, что папка называется именно 'videos' строчными буквами.";
+                console.error(error);
+            }
+        }
+
+        // Включение звука и воспроизведение при наведении курсора
+        function initVideoHover() {
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.addEventListener('mouseenter', () => {
+                    video.muted = false;
+                    video.play().catch(err => console.log("Браузер заблокировал звук до первого клика по сайту"));
+                });
+                video.addEventListener('mouseleave', () => {
+                    video.pause();
+                    video.currentTime = 0;
+                });
             });
-            video.addEventListener('mouseleave', () => {
-                video.pause();
-                video.currentTime = 0;
-            });
-        });
+        }
+
+        loadVideosAutomatically();
     </script>
 </body>
 </html>
