@@ -5,85 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T.A.S.K. — Test Animation Site Kuz</title>
     <style>
-        /* Базовые стили в стиле темной темы YouTube */
+        /* Фирменный стиль T.A.S.K. (киберпанк-минимализм) */
         body {
-            background-color: #0f0f0f;
-            color: #ffffff;
-            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 30px;
         }
 
         header {
-            border-bottom: 1px solid #3f3f3f;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
+            border-left: 4px solid #463077; /* Фиолетовый акцент */
+            padding-left: 20px;
+            margin-bottom: 40px;
         }
 
         h1 {
+            color: #ffffff;
             margin: 0;
-            font-size: 24px;
-            color: #f1f1f1;
+            font-size: 28px;
+            letter-spacing: 2px;
         }
 
-        p.subtitle {
-            color: #aaa;
+        .subtitle {
+            color: #66fcf1; /* Бирюзовый акцент */
             margin: 5px 0 0 0;
             font-size: 14px;
+            text-transform: uppercase;
         }
 
-        /* Сетка для видео-карточек */
-        .video-grid {
+        /* Наша кастомная сетка для коротких рендеров */
+        .animation-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
         }
 
-        /* Видео-карточка */
-        .video-card {
-            background-color: #1f1f1f;
-            border-radius: 12px;
+        /* Стиль карточки анимации */
+        .anim-card {
+            background: #1f2833;
+            border-radius: 8px;
             overflow: hidden;
-            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            border: 1px solid #2f3e46;
         }
 
-        .video-card:hover {
-            transform: scale(1.02);
+        /* Эффект при наведении на карточку */
+        .anim-card:hover {
+            transform: translateY(-5px);
+            border-color: #66fcf1;
+            box-shadow: 0 10px 20px rgba(102, 252, 241, 0.2);
         }
 
-        /* Адаптивный контейнер для видео */
-        .video-container {
+        /* Контейнер для видео под размер 640x360 (соотношение 16:9) */
+        .video-box {
             position: relative;
-            padding-bottom: 56.25%; /* Пропорции 16:9 */
-            height: 0;
-            overflow: hidden;
+            width: 100%;
+            padding-bottom: 56.25%; 
+            background: #000;
         }
 
-        .video-container iframe, .video-container video {
+        /* Настройки нашего видеоплеера */
+        .video-box video {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
+            object-fit: cover; /* Видео аккуратно заполнит карточку */
+            cursor: pointer;
         }
 
-        /* Описание под видео */
-        .video-info {
-            padding: 12px;
+        /* Информация о рендере */
+        .anim-info {
+            padding: 15px;
         }
 
-        .video-title {
+        .anim-title {
+            color: #ffffff;
             font-size: 16px;
-            font-weight: bold;
             margin: 0 0 8px 0;
-            line-height: 1.4;
         }
 
-        .video-description {
-            font-size: 13px;
-            color: #aaa;
-            margin: 0;
+        .anim-meta {
+            font-size: 12px;
+            color: #858585;
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
@@ -91,43 +100,66 @@
 
     <header>
         <h1>T.A.S.K.</h1>
-        <p class="subtitle">Test Animation Site Kuz — Мои шаги в 3D анимации Blender</p>
+        <div class="subtitle">Test Animation Site Kuz // Лаборатория 3D-анимации</div>
     </header>
 
     <main>
-        <div class="video-grid">
+        <div class="animation-grid">
 
-            <!-- Карточка Видео 1 (Пример встроенного видео с YouTube) -->
-            <div class="video-card">
-                <div class="video-container">
-                    <!-- Замените ССЫЛКУ в src на код вашего видео -->
-                    <iframe src="https://youtu.be/wR88sga-FSw" allowfullscreen></iframe>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">Тестовая анимация #1: Прыгающий мяч</h3>
-                    <p class="video-description">Моя самая первая проба работы с ключами анимации и графиками в Blender.</p>
-                </div>
-            </div>
-
-            <!-- Карточка Видео 2 (Если решите хранить файлы прямо в репозитории) -->
-            <div class="video-card">
-                <div class="video-container">
-                    <!-- Файл должен лежать в папке вашего сайта, например в папке /videos/ -->
-                    <video controls>
-                        <source src="videos/my-render-2.mp4" type="video/mp4">
+            <!-- КАРТОЧКА АНИМАЦИИ 1 -->
+            <div class="anim-card">
+                <div class="video-box">
+                    <!-- loop делает видео бесконечным, muted позволяет запускать автоматически -->
+                    <video loop muted controls poster="videos/preview1.jpg">
+                        <source src="videos/render1.mp4" type="video/mp4">
                         Ваш браузер не поддерживает видео.
                     </video>
                 </div>
-                <div class="video-info">
-                    <h3 class="video-title">Тестовый рендер #2: Симуляция ткани</h3>
-                    <p class="video-description">Эксперименты с физикой ткани и правильным выставлением света Cycles.</p>
+                <div class="anim-info">
+                    <h3 class="anim-title">01. Первая проба физики</h3>
+                    <div class="anim-meta">
+                        <span>Длительность: 4с</span>
+                        <span>Цикличный рендер</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Сюда можно добавлять новые карточки по аналогии -->
+            <!-- КАРТОЧКА АНИМАЦИИ 2 -->
+            <div class="anim-card">
+                <div class="video-box">
+                    <video loop muted controls>
+                        <source src="videos/render2.mp4" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                </div>
+                <div class="anim-info">
+                    <h3 class="anim-title">02. Тест камеры и света</h3>
+                    <div class="anim-meta">
+                        <span>Длительность: 8с</span>
+                        <span>Cycles 360p</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Добавляйте новые карточки ниже по этому же шаблону -->
 
         </div>
     </main>
 
+    <script>
+        // Небольшой скрипт для интерактива: 
+        // Видео начинает играть само при наведении мышки, и встает на паузу, когда мышку убирают.
+        const videos = document.querySelectorAll('video');
+        
+        videos.forEach(video => {
+            video.addEventListener('mouseenter', () => {
+                video.play();
+            });
+            video.addEventListener('mouseleave', () => {
+                video.pause();
+                video.currentTime = 0; // Сбрасывает на начало, как гифку
+            });
+        });
+    </script>
 </body>
 </html>
